@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SberDevices</title>
+    <script type="text/javascript">
+        function findGetParameter(parameterName) {
+            let result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+
+        function loadJS(url, callback) {
+            const scriptTag = document.createElement('script');
+            scriptTag.src = url;
+            scriptTag.addEventListener('load', callback);
+            document.body.appendChild(scriptTag);
+
+            scriptTag.addEventListener('error', () => {
+                console.log('Такой версии не существует!');
+            });
+        }
+        const VERSION = findGetParameter('version') || '5.6.3';
+    </script>
+</head>
+<body>
+<div id="retailChat-container"></div>
+    <script type="text/javascript">
+
+        document.addEventListener("sberCareChatLoaded", function() {
+            console.log('load');
+        });
+
+        loadJS(`./${VERSION}/loader_bundle_chat.min.js`, () => {
+            !!window.sberCareChat &&
+            window.sberCareChat.init({
+                startForm: 'Icon',
+                conversations: ['Chat'],
+                mainBundlePath: `./${VERSION}/`,
+                applicationName: 'sberCareChat',
+                mountContainerId: 'chat-app',
+                theme: {
+                    name: 'sberdevices',
+                    fontFamily: '',
+                },
+                search: {
+                    enabled: true,
+                    minLength: 2,
+                },
+                size: {},
+                headerIsEnabled: true,
+                logMetrika: false,
+                logError: false,
+                chatEnabled: true,
+                chatInContent: false,
+                formsOption: {
+                    Icon: {
+                        formAfterClick: 'Chat',
+                        iconImgUrl: '',
+                    },
+                },
+                Chat: {
+                    type: 'messenger',
+                    name: 'Помощник от СберСпасибо',
+                    iconImgUrl: '',
+                    apiWSUrl: 'wss://messenger-ift.sberbank.ru:7764/api/',
+                    apiRestUrl: 'https://i-see-you.ru/session/init/ift/sbermobile/sbermobiledotru',
+                    uploadFile: true,
+                    fileUploadFormats: 'jpg,jpeg,png,pdf',
+                    fileUploadMax: 5120000,
+                    uploadDocumentUrl: 'https://messenger-t.sberbank.ru:8877/api/media/uploadPartnerDocument',
+                    getDocumentUrl: 'https://messenger-t.sberbank.ru:8877/api/media/getPartnerDocument',
+                    firstMessage: {},
+                    domain: 'sberbank.ru',
+                    reconnectMaxCount: 2,
+                    reconnectDuration: 10,
+                    initTimeout: 30,
+                    suggestionShowTime: 60,
+                    dictionary: {
+                        headerTitle: 'Помощник СберСпасибо',
+                        botName: 'Помощник СберСпасибо',
+                        inputPlaceholder: 'Напишите сообщение...',
+                        connectError: {
+                            title: 'Чат временно недоступен',
+                            subTitle: 'Пожалуйста, обратитесь в контактный центр',
+                            phones: [
+                                {
+                                    number: '900',
+                                    text: 'Бесплатные звонки с мобильного',
+                                },
+                                {
+                                    number: '+7 495 500-555-0',
+                                    text: 'Звонки из любой точки мира',
+                                },
+                            ],
+                        },
+                        reconnectError: {
+                            title: 'Чат завершен',
+                            subTitle: 'Спасибо, что обратились к нам. Мы всегда рады помочь!',
+                            buttonText: 'Начать новый чат',
+                        },
+                        errorClosed: {
+                            title: 'Чат временно недоступен',
+                            subTitle: 'Пожалуйста, обратитесь в контактный центр',
+                            phones: [
+                                {
+                                    number: '900',
+                                    text: 'Бесплатные звонки с мобильного',
+                                },
+                                {
+                                    number: '+7 495 500-555-0',
+                                    text: 'Звонки из любой точки мира',
+                                },
+                            ],
+                            buttonText: 'Обновить чат',
+                        },
+                        techBreak: {
+                            title: 'На данный момент отправка сообщений невозможна',
+                            subTitle: 'Попробуйте зайти позже',
+                        },
+                    },
+                },
+            });
+        });
+    </script>
+</body>
+</html>
